@@ -4,5 +4,5 @@
 	# http://stackoverflow.com/a/20762706/1381529
 	ui = auto
 [push]
-  default = simple
+	default = simple
 
