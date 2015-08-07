@@ -1,0 +1,57 @@
+root ALL = (ALL) ALL 
+## Tom can sudo *all* commands as root (not advisable)
+
+tom ALL = (ALL) ALL 
+## Jerry can also, but will not get prompted for his password
+
+jerry ALL = (ALL) NOPASSWD: ALL 
+## Fred allowed to shutdown the system
+
+fred ALL = /sbin/shutdown 
+## Ginger can shutdown and reboot
+
+ginger ALL = /sbin/shutdown,/usr/bin/reboot 
+## Barney allowed to restart the database as root
+
+barney ALL = /usr/bin/oractl 
+## Wilma also, but run these two commands as dba
+
+wilma ALL = (dba) /opt/oracle/oractl,/opt/oracle/orastart 
+## Anyone in the "oracle" group is also allowed the same thing
+
+%oradba ALL = (dba) NOPASSWD: /opt/oracle/oractl,/opt/oracle/orastart 
+## ++++++++++ more advanced management ++++++++++++
+
+## -- User aliases (work like "sudo groups")
+
+User_Alias SYSTEM = rod,jane,freddy 
+User_Alias MAILADMINS = dave,dee,dozy 
+User_Alias WEBMASTERS = dozy,beaky,mick,titch 
+## -- command aliases
+
+Cmnd_Alias SHUTDOWN = /usr/sbin/shutdown 
+Cmnd_Alias HALT = /usr/sbin/halt 
+Cmnd_Alias REBOOT = /usr/sbin/reboot 
+Cmnd_Alias APACHE = /opt/apache/apachectl,/etc/init.d/httpd 
+## -- Runas aliases
+
+Runas_Alias OP = root, operator 
+Runas_Alias DB = oracle, sybase, mysql 
+### === User privilege specification ===
+
+## fred permitted certain commands
+
+fred ALL = HALT,SHUTDOWN,/sbin/poweroff 
+## betty allowed to become fred (without a password)
+
+betty ALL = NOPASSWD: /usr/bin/su fred 
+## all members of the (unix) dba group allowed DB control:
+
+%dba ALL = (DB) /usr/local/bin/dbcontrol 
+## so are members of the SYSTEM user alias (see above)
+
+SYSTEM ALL = (DB) /usr/local/bin/dbcontrol 
+## finally, webserver control: certain individuals can control Apache
+
+WEBMASTERS ALL = (OP) APACHE
+
