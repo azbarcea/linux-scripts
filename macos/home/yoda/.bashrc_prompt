@@ -1,0 +1,45 @@
+source $HOME/.bashrc_colors
+source $HOME/.bashrc_git_prompt
+
+#set +xv
+
+# Various variables you might want for your PS1 prompt instead
+#Time12h="\T"
+#Time12a="\@"
+#PathShort="\W"
+#PathFull="\w"
+#NewLine="\n"
+#Jobs="\j"
+#Username="\u"
+#Hostname="\h"
+
+# Free Memory
+#export MEM_FREE=$((`sed -n "s/MemFree:[\t ]\+\([0-9]\+\) kB/\1/p" /proc/meminfo` / 1024))
+
+# Total Memory
+#export MEM_TOTAL=$((`sed -n "s/MemTotal:[\t ]\+\([0-9]\+\) kB/\1/p" /proc/meminfo`/ 1024 ))MB
+
+# Process loadavg Average:
+#   The first three fields in this file are load average figures giving the number of jobs in the run queue (state R) or waiting for disk I/O (state D) averaged over 1, 5, and 15 minutes. They are the same as the load average numbers given by uptime(1) and other programs. The fourth field consists of two numbers separated by a slash (/). The first of these is the number of currently runnable kernel scheduling entities (processes, threads). The value after the slash is the number of kernel scheduling entities that currently exist on the system. The fifth field is the PID of the process that was most recently created on the system.
+#   example:
+#     0.21       0.25       0.36         1/1031                                 27343
+#     R.Q(1 min) R.Q(5 min) R.Q(15 min)  runnable/kernel scheduling entitities  PID
+#export PROC_AVG=$(< /proc/loadavg)
+
+# configure bashrc_git_prompt
+export GIT_PS1_SHOWCOLORHINTS=true
+export GIT_PS1_SHOWDIRTYSTATE=true
+export GIT_PS1_SHOWUNTRACKEDFILES=true
+
+# Export PS1
+export PS1="[\[${Yellow}\]\u\[${Color_Off}\]@\[${Blue}\]\h:\[${Green}\]\w "'$(git branch &>/dev/null;\
+if [ $? -eq 0 ]; then \
+  echo "$(echo `git status` | grep "nothing to commit" > /dev/null 2>&1; \
+  if [ "$?" -eq "0" ]; then \
+    echo $(__git_ps1 " (%s)"); \
+  else \
+    echo $(__git_ps1 " {%s}"); \
+  fi)"; \
+else \
+  echo ""; \
+fi)'"\[${Color_Off}\]]\$ "
