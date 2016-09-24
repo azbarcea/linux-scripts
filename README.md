@@ -1,6 +1,8 @@
 # linux-scripts
 Useful linux scripts that someone may need from time to time ... 
 
+testing a push with a right credential --
+
 # External
 
 * [advanced tips for a colorful bash prompt](http://www.askapache.com/linux/bash-power-prompt.html)

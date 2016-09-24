@@ -1,0 +1,12 @@
+alias diff='colordiff'              # requires colordiff package
+alias grep='grep --color=auto --ignore-case'
+alias more='less'
+alias df='df -h'
+alias du='du -c -h'
+alias ls='ls -G'
+alias ll='ls -lahG'
+alias mkdir='mkdir -p -v'
+alias nano='nano -w -c'
+alias ping='ping -c 5'
+alias dmesg='dmesg -HL'
+alias ptpb='curl -F c=@- https://ptpb.pw/' # pastebin alternative
