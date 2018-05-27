@@ -10,3 +10,20 @@ alias ping='ping -c 5'
 alias dmesg='dmesg -HL'
 alias ptpb='curl -F c=@- https://ptpb.pw/' # pastebin alternative
 
+# Use an alias to generate random string of [c] chars. Usually for passwords
+function randompasswd() {
+    local OPTIND o a
+    while getopts ":c:" o; do
+        case "${o}" in
+            c)
+                c="${OPTARG}"
+                ;;
+            *)
+                echo "radompasswd [-c 20]"
+                ;;
+        esac
+    done
+    shift $((OPTIND-1))
+    </dev/urandom tr -dc '12345!@#$%^&*()-_+=}|;:",<>./?~\\[]{}`qwertQWERTasdfgASDFGzxcvbZXCVB' | head -c${c:-20}; echo ""
+}
+
