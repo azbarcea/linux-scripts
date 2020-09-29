@@ -27,3 +27,57 @@ function randompasswd() {
     </dev/urandom tr -dc '12345!@#$%^&*()-_+=}|;:",<>./?~\\[]{}`qwertQWERTasdfgASDFGzxcvbZXCVB' | head -c${c:-20}; echo ""
 }
 
+function find_broken_symlinks() {
+  find $1 -type l | (while read FN ; do test -e "$FN" || ls -ld "$FN"; done)
+}
+
+function ssh-session {
+  eval `ssh-agent`
+  ssh-add
+}
+
+# Git related functions
+alias git-remote-follow='git rev-parse --abbrev-ref --symbolic-full-name @{u}'
+
+# Bitbucket fetch PR
+function git-fetchpr() {
+  # not to be used ...
+  git fetch ${1} +refs/pull-requests/${2}/from:refs/remotes/syseng/pull-requests/${2}
+}
+
+# Git ls remote
+function git-ls-remote() {
+  git ls-remote "$1" &>-
+  if [ "$?" -ne 0 ]; then
+    printf '[ERROR] Unable to read from %s' "$1"
+    exit 1;
+  else
+    printf '[OK] Git successfully verified remote %s' "$1"
+  fi
+}
+
+# Check git repo author
+function check_git_repo_author() {
+  git clone --depth=1 "$1" &>-
+  if [ "$?" -ne 0 ]; then
+    printf 'echo [ERROR] Unable to read from %s' "$1"
+    exit 1;
+  else
+    bare_repo=$(basename $1)
+    repo=${bare_repo%.*}
+    cd $repo
+    author=$(git log --format='%ae')
+    printf 'echo %s, %s' "${repo}" "${author}"
+    cd ..
+    rm -fr $repo
+  fi
+}
+
+# Workaround for a BUG in Bitbucket where it doesn't accept tags if they don't start with alpha.
+function git_update_tags() {
+  for i in $(git tag -l | sed 's/[[:alpha:]|(|[:space:]]//g' | awk -F- '{print $1}'); do
+    echo "processing: ${i}"
+    git tag -f -a v${i} -m "re-release ${i}" ${i}^{}
+  done
+}
+
